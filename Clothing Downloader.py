@@ -7,6 +7,13 @@ config = configparser.ConfigParser()
 config.read_file(open(r"Config.ini"))
 init()
 
+path = os.getcwd()
+try:
+    os.remove(f"{path}\\Storage\\Clothes\\Shirts\\deleteme.png")
+    os.remove(f"{path}\\Storage\\Clothes\\Pants\\deleteme.png")
+except:
+    pass
+
 cookie = str(config.get("auth","cookie"))
 session = requests.Session()
 session.cookies[".ROBLOSECURITY"] = cookie
