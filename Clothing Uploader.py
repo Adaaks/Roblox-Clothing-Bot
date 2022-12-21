@@ -21,6 +21,14 @@ group = str(config.get("clothing","group"))
 description = str(config.get("clothing","description"))
 priceconfig = int(config.get("clothing","price"))
 
+
+path = os.getcwd()
+try:
+    os.remove(f"{path}\\Storage\\Clothes\\Shirts\\deleteme.png")
+    os.remove(f"{path}\\Storage\\Clothes\\Pants\\deleteme.png")
+except:
+    pass
+
 # Authentication into roblox account
 session = requests.Session()
 session.cookies[".ROBLOSECURITY"] = cookie
