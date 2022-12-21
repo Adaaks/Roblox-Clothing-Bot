@@ -62,7 +62,18 @@ ab = ab.replace(" ","+")
 ab = ab.lower()
 
 print("\n")
-a = requests.get(f"https://catalog.roblox.com/v1/search/items?category=Clothing&keyword={ab}&limit=120&maxPrice=5&minPrice=5&salesTypeFilter=1&sortAggregation=3&sortType=2&subcategory=Classic{cltype}")
+thelink = f"https://catalog.roblox.com/v1/search/items?category=Clothing&keyword={ab}&limit=120&maxPrice=5&minPrice=5&salesTypeFilter=1&subcategory=Classic{cltype}"
+thelinkweek= f"https://catalog.roblox.com/v1/search/items?category=Clothing&keyword={ab}&limit=120&maxPrice=5&minPrice=5&salesTypeFilter=1&sortAggregation=3&sortType=2&subcategory=Classic{cltype}"
+
+print("Sorts\n- [1] Bestseller (weekly)\n- [2] Relevance")
+sortby = input("Sort by: ")
+if sortby == "1":
+    a = requests.get(thelinkweek)
+elif sortby == "2":
+    a = requests.get(thelink)
+else:
+    print("Wrong input, restart program")
+    
 ids_and_item_types = a.json()["data"]
 friendslist = [datum["id"] for datum in ids_and_item_types]
 print(friendslist)
