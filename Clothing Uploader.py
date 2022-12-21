@@ -98,8 +98,7 @@ def shirts():
         'config': open('Storage\Json\config.json', 'rb')
         }
     s = session.post(link,files=files)
-    files["media"].close()
-    os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
+    
     sd = s.json()
     
     try:
@@ -111,6 +110,8 @@ def shirts():
         code = sd['errors'][0]['code']
         if code == 16:
             print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Clothing name not allowed, removing from list: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
             shirts()
             return
         elif code == 0:
@@ -123,6 +124,8 @@ def shirts():
             input()
         elif code == 7:
             print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Invalid template, removing from list: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
             shirts()
             return
             
@@ -136,11 +139,15 @@ def shirts():
     if pants == False:
         if s.status_code == 200:
             print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully uploaded a shirt: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
         else:
             print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Failed to upload a shirt: {name}")
     else:
         if s.status_code == 200:
             print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully uploaded pants: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
         else:
             print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Failed to upload pants: {name}")
 
