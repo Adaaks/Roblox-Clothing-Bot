@@ -20,6 +20,7 @@ cookie = str(config.get("auth","cookie"))
 group = str(config.get("clothing","group"))
 description = str(config.get("clothing","description"))
 priceconfig = int(config.get("clothing","price"))
+ratelimz = int(config.get("clothing","ratelimitwaitseconds"))
 
 
 path = os.getcwd()
@@ -115,8 +116,8 @@ def shirts():
             shirts()
             return
         elif code == 0:
-            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Ratelimited, failed to upload (waiting 60s): {name}\n")
-            time.sleep(60)
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Ratelimited, failed to upload (waiting {ratelimz}s): {name}\n")
+            time.sleep(ratelimz)
             shirts()
             return
         elif code == 6:
