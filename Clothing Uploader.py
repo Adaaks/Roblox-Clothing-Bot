@@ -13,7 +13,7 @@ try:
     init()
 # If user doesn't have one of the modules, it will tell them to install all of the required
 except ImportError:
-    print("[ERROR] Failed to import some modules, install the required modules listed:\n- requests\n- colorama\n- configparser\n\nThese can be installed via going to the cmd, and typing pip install (moduleName)")
+    print("[ERROR] Failed to import some modules, make sure to run requirements.bat, delete all other python versions and install python 3.10.0 installed with add to path option checked during installation")
     input()
 
 cookie = str(config.get("auth","cookie"))
