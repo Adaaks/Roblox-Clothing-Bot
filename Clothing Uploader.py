@@ -99,8 +99,10 @@ def shirts():
         'config': open('Storage\Json\config.json', 'rb')
         }
     s = session.post(link,files=files)
+
     
     sd = s.json()
+   
     
     try:
         assetid = sd['assetId']
@@ -110,7 +112,7 @@ def shirts():
         #print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Invalid template: {name}\n")
         code = sd['errors'][0]['code']
         if code == 16:
-            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Clothing name not allowed, removing from list: {name}")
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Clothing name not allowed or invalid description, removing from list: {name}")
             files["media"].close()
             os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
             shirts()
@@ -129,8 +131,10 @@ def shirts():
             os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
             shirts()
             return
-            
-            
+        elif code == 9:
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} You do not have permission to upload to the group: {name}")
+            shirts()
+            return
             
 
     pricefiles = {"price":priceconfig,"priceConfiguration":{"priceInRobux":priceconfig},"saleStatus":"OnSale"}
