@@ -20,7 +20,8 @@ cookie = str(config.get("auth","cookie"))
 group = str(config.get("clothing","group"))
 description = str(config.get("clothing","description"))
 priceconfig = int(config.get("clothing","price"))
-ratelimz = int(config.get("clothing","ratelimitwaitseconds"))
+ratelimz = int(config.get("optional","ratelimitwaitseconds"))
+maxrobux = int(config.get("optional","maxrobuxtospend"))
 
 
 path = os.getcwd()
@@ -49,11 +50,23 @@ except:
     input()
 
 # Main program
+brokie = session.get("https://economy.roblox.com/v1/user/currency")
+brokie = brokie.json()
+brokie=brokie["robux"]
+print(f"{Back.CYAN}{Fore.BLACK}[Robux]{Back.BLACK}{Fore.WHITE} Remaining: R$ {brokie}")
 print("\n")
 pants = False
 assetid = "1"
+robuxspent = 0
+
+
 def shirts():
-    global group,description,priceconfig, name,creator,creatortype, pants,assetid
+    global group,description,priceconfig, name,creator,creatortype, pants,assetid, robuxspent, maxrobux
+
+    if robuxspent >= maxrobux:
+        print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Max robux spent reached, stopping program")
+        input()
+        return
 
     try:
         path = os.getcwd()
@@ -100,10 +113,8 @@ def shirts():
         }
     s = session.post(link,files=files)
 
-    
     sd = s.json()
    
-    
     try:
         assetid = sd['assetId']
     except:
@@ -132,7 +143,7 @@ def shirts():
             shirts()
             return
         elif code == 9:
-            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} You do not have permission to upload to the group: {name}")
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} You do not have permission to upload to the group")
             shirts()
             return
             
@@ -144,6 +155,7 @@ def shirts():
     if pants == False:
         if s.status_code == 200:
             print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully uploaded a shirt: {name}")
+            robuxspent+=10
             files["media"].close()
             os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
         else:
@@ -151,6 +163,7 @@ def shirts():
     else:
         if s.status_code == 200:
             print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully uploaded pants: {name}")
+            robuxspent+=10
             files["media"].close()
             os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
         else:
@@ -161,6 +174,12 @@ def shirts():
     else:
         print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Failed to set a price: {name}")
     print("\n")
+    brokie = session.get("https://economy.roblox.com/v1/user/currency")
+    brokie = brokie.json()
+    brokie=brokie["robux"]
+    print(f"{Back.CYAN}{Fore.BLACK}[Robux]{Back.BLACK}{Fore.WHITE} Remaining: R$ {brokie}")
+    print("\n")
+
     shirts()
 if pants == False:
     a = shirts()
