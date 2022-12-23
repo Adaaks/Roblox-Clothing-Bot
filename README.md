@@ -1,7 +1,7 @@
 # Roblox Clothing Bot
 Uploads clothing to your group to speed up the tedious process
 
-- Make sure you have python3, and run Requirements.bat to install all required modules
+- Make sure you have python 3.10.0 installed, with add to path option checked during installation, and run Requirements.bat to install all required modules
 
 Open config.ini fill in your details
 - Follow the format how it already is
