@@ -1,11 +1,27 @@
-import requests
-import requests, re, time, random, os
-from colorama import init, Fore
-import emoji
-import configparser
-config = configparser.ConfigParser()
-config.read_file(open(r"Config.ini"))
-init()
+try:
+    import time
+    import colorama
+    import requests
+    import time
+    import re
+    import configparser
+    from cleantext import clean
+    config = configparser.ConfigParser()
+    config.read_file(open(r"Config.ini"))
+    import os
+    from colorama import init, Fore, Back, Style
+    init()
+# If user doesn't have one of the modules, it will tell them to install all of the required
+except ImportError:
+    print("[ERROR] Failed to import some modules, make sure to run requirements.bat, delete all other python versions and install python 3.10.0 installed with add to path option checked during installation")
+    input()
+
+cookie = str(config.get("auth","cookie"))
+group = str(config.get("clothing","group"))
+description = str(config.get("clothing","description"))
+priceconfig = int(config.get("clothing","price"))
+ratelimz = int(config.get("clothing","ratelimitwaitseconds"))
+
 
 path = os.getcwd()
 try:
@@ -14,106 +30,140 @@ try:
 except:
     pass
 
-cookie = str(config.get("auth","cookie"))
+# Authentication into roblox account
 session = requests.Session()
 session.cookies[".ROBLOSECURITY"] = cookie
-
-# send first request
-req = session.post(
-    url="https://auth.roblox.com/"
-)
-
-if "X-CSRF-Token" in req.headers:  # check if token is in response headers
-    session.headers["X-CSRF-Token"] = req.headers["X-CSRF-Token"]  # store the response header in the session
-
-# send second request
-req2 = session.post(
-    url="https://auth.roblox.com/"
-)
-
-# Attempt to get player user
+req = session.post(url="https://auth.roblox.com/")
+if "X-CSRF-Token" in req.headers: 
+    session.headers["X-CSRF-Token"] = req.headers["X-CSRF-Token"]  
+req2 = session.post(url="https://auth.roblox.com/")
 try:
     getuser = session.get("https://users.roblox.com/v1/users/authenticated")
     getuser2 = getuser.json()
     getuser3 = getuser2['id']
     getuser4 = getuser2['name']
-    print(f"Logged in as {getuser4}\n")
-
-# If failed, it means the cookie is invalid, so the user will be told that
+    print(f"{Back.CYAN}{Fore.BLACK}[Authentication]{Back.BLACK}{Fore.WHITE} Logged in as {getuser4}")
 except:
-    print(f"Your cookie is invalid")
+    print(f"{Back.RED}{Fore.BLACK}[Error]{Back.BLACK}{Fore.WHITE} Your cookie is invalid")
+    print(f"{Back.YELLOW}{Fore.BLACK}[Info]{Back.BLACK}{Fore.WHITE} Please restart the program, with a valid cookie")
     input()
 
-
-print("Clothing\n- Shirts (s)\n- Pants (p)")
-b = input("Enter type (s/p): ")
-cltype = ""
-if b.lower() == "shirts" or b.lower() == "shirt" or b.lower() == "s":
-    cltype = "Shirts"
-elif b.lower() == "pants" or  b.lower() == "pant" or b.lower() == "p":
-    cltype = "Pants"
-print(f"Selected: {cltype}")
-
+# Main program
 print("\n")
-print("Keywords example\n- emo goth y2k\n- slender black dark")
-ab = input("Enter keywords: ")
-ab = ab.strip()
-ab = ab.replace(" ","+")
-ab = ab.lower()
+pants = False
+assetid = "1"
+def shirts():
+    global group,description,priceconfig, name,creator,creatortype, pants,assetid
 
-print("\n")
-thelink = f"https://catalog.roblox.com/v1/search/items?category=Clothing&keyword={ab}&limit=120&maxPrice=5&minPrice=5&salesTypeFilter=1&subcategory=Classic{cltype}"
-thelinkweek= f"https://catalog.roblox.com/v1/search/items?category=Clothing&keyword={ab}&limit=120&maxPrice=5&minPrice=5&salesTypeFilter=1&sortAggregation=3&sortType=2&subcategory=Classic{cltype}"
-
-print("Sorts\n- [1] Bestseller (weekly)\n- [2] Relevance")
-sortby = input("Sort by: ")
-if sortby == "1":
-    a = requests.get(thelinkweek)
-elif sortby == "2":
-    a = requests.get(thelink)
-else:
-    print("Wrong input, restart program")
-    
-ids_and_item_types = a.json()["data"]
-friendslist = [datum["id"] for datum in ids_and_item_types]
-print(friendslist)
-print("\n")
-
-def remove_emoji(string):
-    return emoji.get_emoji_regexp().sub(u'', string)
-        
-amount = 0      
-for i in friendslist:
-   try:
-        r = requests.get(re.findall(r'<url>(.+?)(?=</url>)', requests.get(f'https://assetdelivery.roblox.com/v1/asset?id={i}').text.replace('http://www.roblox.com/asset/?id=', 'https://assetdelivery.roblox.com/v1/asset?id='))[0]).content
-        data = {
-          "items": [
-            {
-              "itemType": "Asset",
-              "id": i
-            }
-          ]
-        }
-
-                
-        a = session.post("https://catalog.roblox.com/v1/catalog/items/details",json=data)
-        a=a.json()
-        a=a['data'][0]['name']
-        i=a
-        i = remove_emoji(i)
-        if len(r) >= 7500:
-            print(f'Downloaded')
-            if cltype == "Shirts":
-                with open(f'Storage/Clothes/Shirts/{i}.png', 'wb') as f:
-                    f.write(r)
-            elif cltype == "Pants":
-                with open(f'Storage/Clothes/Pants/{i}.png', 'wb') as f:
-                    f.write(r)
-            amount+=1
-                
+    try:
+        path = os.getcwd()
+        if pants == False:
+            pathz = f"{path}\\Storage\\Clothes\\Shirts"
         else:
-            print(f'Unable to download asset')
-   except:
-        print(f'Unable to download asset')
-        pass
-print(f"Completed, downloaded {amount} clothes")
+            pathz = f"{path}\\Storage\\Clothes\\Pants"
+        name = os.listdir(pathz)[0]
+        name = name.split(".")
+        name = name[0]
+        creator = group
+        creatortype = "Group"
+        name = clean(name, no_emoji=True)
+    except:
+        if pants == False:
+            
+            print(f"{Back.MAGENTA}{Fore.BLACK}[Shirts]{Back.BLACK}{Fore.WHITE} All shirts have been uploaded, moving to pants\n")
+            pants = True
+            shirts()
+            return
+            
+        else:
+            print(f"{Back.MAGENTA}{Fore.BLACK}[Pants]{Back.BLACK}{Fore.WHITE} All pants have been uploaded, you may close the program")
+            input()
+            return
+        return "hey"
+        pants = True
+        shirts()
+        
+    json = open("Storage\Json\config.json","w")
+    json.write(f"""{{"name":"{name}","description":"{description}","creatorTargetId":"{creator}","creatorType":"{creatortype}"}}""")
+    json.close()
+
+    path = os.getcwd()
+    if pants == False:
+        
+        link = "https://itemconfiguration.roblox.com/v1/avatar-assets/11/upload"
+    if pants == True:
+        link = "https://itemconfiguration.roblox.com/v1/avatar-assets/12/upload"
+    
+    files = {
+        'media': open(fr"{pathz}\\{os.listdir(pathz)[0]}", 'rb'),
+        'config': open('Storage\Json\config.json', 'rb')
+        }
+    s = session.post(link,files=files)
+
+    
+    sd = s.json()
+   
+    
+    try:
+        assetid = sd['assetId']
+    except:
+        #files["media"].close()
+        #os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
+        #print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Invalid template: {name}\n")
+        code = sd['errors'][0]['code']
+        if code == 16:
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Clothing name not allowed or invalid description, removing from list: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
+            shirts()
+            return
+        elif code == 0:
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Ratelimited, failed to upload (waiting {ratelimz}s): {name}\n")
+            time.sleep(ratelimz)
+            shirts()
+            return
+        elif code == 6:
+            print(f"{Back.RED}{Fore.BLACK}[Robux]{Back.BLACK}{Fore.WHITE} You don't have 10 robux to upload: {name}")
+            input()
+        elif code == 7:
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Invalid template, removing from list: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
+            shirts()
+            return
+        elif code == 9:
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} You do not have permission to upload to the group: {name}")
+            shirts()
+            return
+            
+
+    pricefiles = {"price":priceconfig,"priceConfiguration":{"priceInRobux":priceconfig},"saleStatus":"OnSale"}
+    priceupdate = f"https://itemconfiguration.roblox.com/v1/assets/{assetid}/release"
+    price = session.post(priceupdate,json=pricefiles)
+
+    if pants == False:
+        if s.status_code == 200:
+            print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully uploaded a shirt: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
+        else:
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Failed to upload a shirt: {name}")
+    else:
+        if s.status_code == 200:
+            print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully uploaded pants: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
+        else:
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Failed to upload pants: {name}")
+
+    if price.status_code == 200:
+        print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully set price to R$ {priceconfig}")
+    else:
+        print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Failed to set a price: {name}")
+    print("\n")
+    shirts()
+if pants == False:
+    a = shirts()
+    if a == "hey":
+        pants = True
+        shirts()
