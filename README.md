@@ -1,6 +1,16 @@
 # Roblox Clothing Bot
-Uploads clothing to your group to speed up the tedious process
+Features
+- Mass clothing downloader
+ - Template changer (prevents copyright, automatic clothing deletions)
+ - Searches maximum catalog pages
+ - Decide what sort to search in
 
+- Clothing Uploader
+ - Integrates with mass clothing downloader to upload clothing
+ - Set a limit of max robux to spend
+ - Detects ratelimits, and other user errors
+ 
+ # Setup
 - Make sure you have python 3.10.0 installed, with add to path option checked during installation, and run Requirements.bat to install all required modules
 
 Open config.ini fill in your details
