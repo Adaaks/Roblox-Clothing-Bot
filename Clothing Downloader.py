@@ -119,7 +119,7 @@ print("\nGathering clothes")
 pagecurrent = 0
 a = requests.get(a)
 nextpagecursor = a.json()
-print(nextpagecursor)
+
 
 try:
     nextpagecursor = nextpagecursor["nextPageCursor"]
