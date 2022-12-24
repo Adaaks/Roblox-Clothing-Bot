@@ -1,11 +1,11 @@
 # Roblox Clothing Bot
-Features
-- Mass clothing downloader
+# Features
+Mass clothing downloader
  - Template changer (prevents copyright, automatic clothing deletions)
  - Searches maximum catalog pages
  - Decide what sort to search in
 
-- Clothing Uploader
+Clothing Uploader
  - Integrates with mass clothing downloader to upload clothing
  - Set a limit of max robux to spend
  - Detects ratelimits, and other user errors
