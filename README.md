@@ -1,3 +1,5 @@
+# WARNING: IT COSTS 10 ROBUX TO UPLOAD EACH CLOTHING
+
 # Roblox Clothing Bot
 # Features
 Mass clothing downloader
