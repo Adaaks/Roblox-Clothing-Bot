@@ -112,6 +112,7 @@ def shirts():
         'config': open('Storage\Json\config.json', 'rb')
         }
     s = session.post(link,files=files)
+    files["media"].close()
 
     sd = s.json()
    
@@ -156,7 +157,6 @@ def shirts():
         if s.status_code == 200:
             print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully uploaded a shirt: {name}")
             robuxspent+=10
-            files["media"].close()
             os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
         else:
             print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Failed to upload a shirt: {name}")
@@ -164,7 +164,6 @@ def shirts():
         if s.status_code == 200:
             print(f"{Back.GREEN}{Fore.BLACK}[Upload]{Back.BLACK}{Fore.WHITE} Successfully uploaded pants: {name}")
             robuxspent+=10
-            files["media"].close()
             os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
         else:
             print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Failed to upload pants: {name}")
