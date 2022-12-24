@@ -10,6 +10,7 @@ try:
     init()
 except:
     print("Run Requirements.bat to install all required modules.")
+    input()
 
 path = os.getcwd()
 try:
