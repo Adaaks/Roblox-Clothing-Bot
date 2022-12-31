@@ -1,4 +1,4 @@
-# SUPPORT: https://discord.gg/bmVS7Z4HkC
+# Issue? Make a report, I will debug your issue = https://github.com/Adaaks/Roblox-Clothing-Bot/issues/new
 # WARNING: IT COSTS 10 ROBUX TO UPLOAD EACH CLOTHING
 
 # Roblox Clothing Bot
