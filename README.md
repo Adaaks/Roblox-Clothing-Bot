@@ -1,3 +1,4 @@
+# https://discord.gg/bmVS7Z4HkC
 # WARNING: IT COSTS 10 ROBUX TO UPLOAD EACH CLOTHING
 
 # Roblox Clothing Bot
