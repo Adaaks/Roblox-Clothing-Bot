@@ -22,6 +22,7 @@ description = str(config.get("clothing","description"))
 priceconfig = int(config.get("clothing","price"))
 ratelimz = int(config.get("optional","ratelimitwaitseconds"))
 maxrobux = int(config.get("optional","maxrobuxtospend"))
+debugmode = config.getboolean('optional', 'debugmode') 
 
 
 path = os.getcwd()
@@ -112,6 +113,8 @@ def shirts():
         'config': open('Storage\Json\config.json', 'rb')
         }
     s = session.post(link,files=files)
+    if debugmode == True:
+        print(f"Status: {s.status_code}\nResponse: {s.text}"
     files["media"].close()
 
     sd = s.json()
