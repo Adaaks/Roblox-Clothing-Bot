@@ -114,7 +114,7 @@ def shirts():
         }
     s = session.post(link,files=files)
     if debugmode == True:
-        print(f"Status: {s.status_code}\nResponse: {s.text}"
+        print(f"Status: {s.status_code}\nResponse: {s.text}")
     files["media"].close()
 
     sd = s.json()
