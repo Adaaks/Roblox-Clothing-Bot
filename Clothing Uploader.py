@@ -138,6 +138,12 @@ def shirts():
             os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
             shirts()
             return
+        elif code == 8:
+            print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Invalid file type extension, removing from list: {name}")
+            files["media"].close()
+            os.remove(fr"{pathz}\\{os.listdir(pathz)[0]}")
+            shirts()
+            return
         elif code == 0:
             print(f"{Back.RED}{Fore.BLACK}[Fail]{Back.BLACK}{Fore.WHITE} Ratelimited, failed to upload (waiting {ratelimz}s): {name}\n")
             time.sleep(ratelimz)
